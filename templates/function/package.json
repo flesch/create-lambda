@@ -1,0 +1,53 @@
+{
+  "name": "{{ package.name }}",
+  "description": "{{ package.description }}",
+  "homepage": "https://github.com/{{ package.user }}/{{ package.name }}",
+  "version": "{{ init.version }}",
+  "main": "./dist/index.js",
+  "author": {
+    "email": "{{ init.author.email }}",
+    "name": "{{ init.author.name }}",
+    "url": "{{ init.author.url }}"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/{{ package.user }}/{{ package.name }}.git"
+  },
+  "bugs": {
+    "url": "https://github.com/{{ package.user }}/{{ package.name }}/issues"
+  },
+  "keywords": [
+    "aws",
+    "lambda"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "babel-plugin-add-module-exports": "^1.0.0",
+    "claudia": "^2.10.0",
+    "prettier": "^1.14.3"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "babel src --out-dir dist",
+    "claudia": "claudia --profile {{ aws.profile }}",
+    "create": "npm run prepare && claudia --profile {{ aws.profile }} create --handler dist/index.handler --region {{ aws.region }} --no-optional-dependencies --deploy-proxy-api --cache-api-config --timeout 30 --set-env-from-json env.json --version v${npm_package_version:0:1}",
+    "deploy": "[ -f claudia.json ] && npm run update || npm run create",
+    "destroy": "claudia --profile {{ aws.profile }} destroy",
+    "latest": "claudia --profile {{ aws.profile }} set-version --set-env-from-json env.json --version latest",
+    "logs": "aws --profile {{ aws.profile }} --region {{ aws.region }} logs filter-log-events --log-group-name /aws/lambda/${npm_package_name}",
+    "logs:delete": "aws --profile {{ aws.profile }} --region {{ aws.region }} logs delete-log-group --log-group-name /aws/lambda/${npm_package_name}",
+    "prepare": "npm run prettier && npm run build",
+    "prettier": "prettier --write \"**/*.js\"",
+    "update": "npm run prepare && claudia --profile {{ aws.profile }} update --no-optional-dependencies --cache-api-config --set-env-from-json env.json --version v${npm_package_version:0:1}"
+  },
+  "license": "MIT",
+  "optionalDependencies": {
+    "aws-sdk": "^2.28.0"
+  }
+}
