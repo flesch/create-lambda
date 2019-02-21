@@ -1,5 +1,5 @@
 {
-  "name": "{{ package.name }}",
+  "name": "<%- @name %>",
   "description": "{{ package.description }}",
   "homepage": "https://github.com/{{ package.user }}/{{ package.name }}",
   "version": "{{ init.version }}",

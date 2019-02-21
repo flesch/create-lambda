@@ -1,0 +1,13 @@
+# <%- @project.name %>
+
+<% if @project.description : %>
+<%- @project.description %>
+<% end %>
+
+## License
+
+<% if @author.url : %>
+MIT © <%- @year %> [<%- @author.name %>](<%- @author.url %>)
+<% else : %>
+MIT © <%- @year %> [<%- @author.name %>](<%- @author.email %>)
+<% end %>
